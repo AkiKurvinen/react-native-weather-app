@@ -6,6 +6,7 @@ import {
   Image,
   PermissionsAndroid,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import {useState, useEffect, useRef} from 'react';
 import Geolocation from 'react-native-geolocation-service';
@@ -108,7 +109,9 @@ const App = () => {
       url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apikey}`;
     } else {
       getOneTimeLocation();
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${currentLatitude}&lon=${currentLongitude}&appid=${apikey}`;
+      if (locationStatus !== '' && locationStatus !== 'Permission Denied') {
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${currentLatitude}&lon=${currentLongitude}&appid=${apikey}`;
+      }
     }
     try {
       const response = await fetch(url);
@@ -124,15 +127,15 @@ const App = () => {
       );
     } catch (error) {
       console.log(error);
-      updateWeather('Tampere', 'error', 0, 0, '01d');
+      updateWeather('--', 'Error', 0, 0, '01d');
     }
   };
 
   return (
-    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-      <Text style={{fontSize: 16}}>{weatherData.city}</Text>
+    <View style={styles.container}>
+      <Text style={styles.cityNameTxt}>{weatherData.city}</Text>
       <Image
-        style={{height: 50, width: 50}}
+        style={styles.weatherIconImage}
         source={{
           uri: `https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`,
         }}
@@ -149,4 +152,20 @@ const App = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  cityNameTxt: {
+    fontSize: 16,
+  },
+  weatherIconImage: {
+    height: 50,
+    width: 50,
+  },
+});
+
 export default App;
