@@ -1,4 +1,4 @@
-# React Nativ - Weather app
+# React Native - Weather app
 
 API: openweathermap
 
