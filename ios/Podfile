@@ -16,6 +16,8 @@ target 'weatherApp' do
 
   pod 'react-native-location', :path => '../node_modules/react-native-location'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'weatherAppTests' do
     inherit! :complete
     # Pods for testing

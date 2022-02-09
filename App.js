@@ -10,13 +10,16 @@ import {
 } from 'react-native';
 import {useState, useEffect, useRef} from 'react';
 import Geolocation from 'react-native-geolocation-service';
+import Topbar from './components/Topbar';
+import LinearGradient from 'react-native-linear-gradient';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
   const [weatherData, setWeatherData] = useState({
     city: 'Tampere',
     desc: '--',
-    temperature: -5,
-    windSpeed: 3,
+    temperature: 0,
+    windSpeed: 0,
     icon: '01d',
   });
   const watchID = useRef(null);
@@ -110,7 +113,7 @@ const App = () => {
     } else {
       getOneTimeLocation();
       if (locationStatus !== '' && locationStatus !== 'Permission Denied') {
-        url = `https://api.openweathermap.org/data/2.5/weather?lat=${currentLatitude}&lon=${currentLongitude}&appid=${apikey}`;
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${currentLatitude}&lon=${currentLongitude}&units=metric&appid=${apikey}`;
       }
     }
     try {
@@ -133,22 +136,42 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.cityNameTxt}>{weatherData.city}</Text>
-      <Image
-        style={styles.weatherIconImage}
-        source={{
-          uri: `https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`,
-        }}
-      />
+      <Topbar name={weatherData.city} />
+      <View style={styles.contentContainer}>
+        <LinearGradient
+          colors={['#4c669f', '#3b5998', '#192f6a']}
+          style={styles.linearGradient}>
+          <Text style={styles.cityNameTxt}>Sää</Text>
+          <Image
+            style={styles.weatherIconImage}
+            source={{
+              uri: `https://openweathermap.org/img/wn/${weatherData.icon}@4x.png`,
+            }}
+          />
 
-      <Text>{weatherData.desc}</Text>
-      <Text>{weatherData.temperature} °C</Text>
-      <Text>{weatherData.windSpeed} m/s</Text>
-      <Button
-        title="Hae säätiedot"
-        onPress={() => fetchWeatherData('tampere')}
-      />
-      <Button title="GPS" onPress={() => fetchWeatherData('gps')} />
+          <Text style={[styles.center, styles.p]}>{weatherData.desc}</Text>
+          <Text style={[styles.center, styles.p]}>
+            {weatherData.temperature} °C
+          </Text>
+          <Text style={[styles.center, styles.p]}>
+            {weatherData.windSpeed} m/s
+          </Text>
+        </LinearGradient>
+      </View>
+
+      <View style={styles.bottomMenu}>
+        <Button
+          color="teal"
+          title="Hae säätiedot"
+          onPress={() => fetchWeatherData('tampere')}
+        />
+        <View style={styles.space} />
+        <Button
+          color="teal"
+          title="GPS"
+          onPress={() => fetchWeatherData('gps')}
+        />
+      </View>
     </View>
   );
 };
@@ -156,15 +179,45 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+  },
+  contentContainer: {
+    marginTop: 0,
     justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  p: {fontSize: 24},
+  main: {
+    flex: 1, // pushes the footer to the end of the screen
+  },
+  bottomMenu: {
+    margin: 25,
+  },
+  footer: {
+    height: 100,
+  },
+  space: {
+    width: 20, // or whatever size you need
+    height: 20,
   },
   cityNameTxt: {
-    fontSize: 16,
+    fontSize: 24,
+    color: 'white',
+    textAlign: 'center',
+  },
+  center: {
+    textAlign: 'center',
   },
   weatherIconImage: {
-    height: 50,
-    width: 50,
+    height: 200,
+    width: 200,
+  },
+  linearGradient: {
+    flex: 1,
+    alignSelf: 'stretch',
+    textAlign: 'center',
+    alignItems: 'center',
+    paddingTop: 25,
   },
 });
 
