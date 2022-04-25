@@ -11,3 +11,8 @@ API: openweathermap
 ## Error handling
 
 - Check Geolocation permission
+
+## Screenshots
+
+![Current weather](/screenshots/current.jpg?raw=true 'Current weather')
+![Forecast](/screenshots/forecast.jpg?raw=true 'Forecast view')
